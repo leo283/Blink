@@ -491,9 +491,21 @@ const PlayButton = ({
 					itemName = result.item.Items[0].Name;
 				}
 
+				const mediaStreams = result.mediaSource.MediaSources?.[0].MediaStreams || [];
+
+				
+				let indexToUse=undefined;
+				mediaStreams.forEach((stream, index) => {
+					if (stream.Type === "Subtitle" && stream.Language === "spa") {
+						indexToUse = index-1;
+						return; 
+					}
+				});
+				console.log(indexToUse)
+	
 				// Subtitle
 				const subtitle = getSubtitle(
-					result.mediaSource.MediaSources?.[0].DefaultSubtitleStreamIndex ?? -1,
+					indexToUse ?? result.mediaSource.MediaSources?.[0].DefaultSubtitleStreamIndex??-1,
 					result?.mediaSource?.MediaSources?.[0]?.MediaStreams,
 				);
 
