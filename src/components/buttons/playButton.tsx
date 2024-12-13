@@ -495,12 +495,26 @@ const PlayButton = ({
 
 				
 				let indexToUse=undefined;
-				mediaStreams.forEach((stream, index) => {
-					if (stream.Type === "Subtitle" && stream.Language === "spa") {
-						indexToUse = index-1;
-						return; 
-					}
-				});
+
+
+
+				const spanishStreams = mediaStreams.filter((stream) => stream.Language === "spa"&&stream.Type==="Subtitle");
+				if (spanishStreams.length>0) {
+					mediaStreams.forEach((stream, index) => {
+						if (stream.Type === "Subtitle" && stream.Language === "spa") {
+							indexToUse = index; 
+						}
+					});
+				}
+
+				else {
+					mediaStreams.forEach((stream, index) => {
+						console.log(index, stream)
+						if (stream.Type === "Subtitle" && stream.Language === "eng") {
+							indexToUse = index;
+						}
+					});
+				}
 				console.log(indexToUse)
 	
 				// Subtitle
