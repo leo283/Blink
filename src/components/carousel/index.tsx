@@ -44,6 +44,7 @@ const Carousel = ({
 	// Memoize the content mapping
 	const sliderContent = useMemo(() => {
 		return content.map((item, index) => {
+			console.log(item);
 			return (
 				<motion.div
 					className={
@@ -71,27 +72,77 @@ const Carousel = ({
 						setCurrentSlide(index);
 					}}
 				>
-					{item.ImageTags?.Thumb ? (
-						<img
-							src={
-								api &&
-								getImageUrlsApi(api).getItemImageUrlById(
-									item.Id ?? "",
-									"Thumb",
-									{
-										tag: item.ImageTags.Primary,
-										fillWidth: 300,
-									},
-								)
-							}
-							alt={item.Name ?? "item-image"}
-							className="carousel-indicator-image"
-						/>
-					) : (
-						<div className="carousel-indicator-icon">
-							{getTypeIcon(item.Type ?? "Movie")}
-						</div>
-					)}
+{
+    (() => {
+		
+		if ((item.ImageTags?.Primary && item.Type==="MusicAlbum")) {
+			return (
+                <img
+                    src={
+                        api &&
+                        getImageUrlsApi(api).getItemImageUrlById(
+                            item.Id ?? "",
+                            "Primary",
+                            {
+                                tag: item.ImageTags.Primary,
+                                fillWidth: 300,
+                            },
+                        )
+                    }
+                    alt={item.Name ?? "item-image"}
+                    className="carousel-indicator-image"
+                />
+            );
+		}
+		 // biome-ignore lint/style/noUselessElse: <explanation>
+        else if (item.ImageTags?.Thumb) {
+            return (
+                <img
+                    src={
+                        api &&
+                        getImageUrlsApi(api).getItemImageUrlById(
+                            item.Id ?? "",
+                            "Thumb",
+                            {
+                                tag: item.ImageTags.Primary,
+                                fillWidth: 300,
+                            },
+                        )
+                    }
+                    alt={item.Name ?? "item-image"}
+                    className="carousel-indicator-image"
+                />
+            );
+        // biome-ignore lint/style/noUselessElse: <explanation>
+        } else if (item.BackdropImageTags) {
+            return (
+                <img
+                    src={
+                        api &&
+                        getImageUrlsApi(api).getItemImageUrlById(
+                            item.Id ?? "",
+                            "Backdrop",
+                            {
+                                tag: item.BackdropImageTags[0],
+                                fillWidth: 300,
+                            },
+                        )
+                    }
+                    alt={item.Name ?? "item-image"}
+                    className="carousel-indicator-image"
+                />
+            );
+        // biome-ignore lint/style/noUselessElse: <explanation>
+        } else {
+            return (
+                <div className="carousel-indicator-icon">
+                    {getTypeIcon(item.Type ?? "Movie")}
+                </div>
+            );
+        }
+    })()
+}
+
 				</motion.div>
 			);
 		});
